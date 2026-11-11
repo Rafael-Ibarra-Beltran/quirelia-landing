@@ -1,0 +1,37 @@
+:root {
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 160ms; --dur-short: 200ms; --dur-long: 220ms; --dur-mode: 1500ms;
+  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
+  --container: 1240px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+  --color-paper: #F8F6F2; --color-paper-2: #F0ECE4; --color-paper-3: #E7E1D6;
+  --color-ink: #182230; --color-ink-2: #34425A; --color-muted: #566176;
+  --color-rule: #D8D2C6;
+  --color-accent: #274C9B; --color-accent-ink: #FBFAF7; --color-button-ink: #FBFAF7; --color-focus: #274C9B; --color-button: #274C9B; --color-coral: #EA735B; --color-tinta: #182230; --color-marfil: #F8F6F2; --color-coral-ink: #182230;
+  --font-display: "Sora Variable", ui-sans-serif, system-ui, sans-serif; --font-body: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif; --font-outlier: "JetBrains Mono", ui-monospace, monospace;
+  --radius-control: 8px; --radius-card: 12px; --radius-block: 16px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: none;
+  --tracking-display: -0.02em;
+}
+
+/* Jellyfish palettes. The canvas engine reads these with getComputedStyle, so no colour lives in JS.
+   Tones 1..7 run from outline to highlight and are interpolated into a 16-step ramp; 8 is the single bright glint. */
+:root {
+  --jelly-deep-1: #18294F; --jelly-deep-2: #1F3A75; --jelly-deep-3: #2A52A4; --jelly-deep-4: #4273CF; --jelly-deep-5: #6D99EA; --jelly-deep-6: #A9C6F8; --jelly-deep-7: #F1F6FF; --jelly-deep-8: #FFFFFF;
+  --jelly-deep-halo: #213C74; --jelly-deep-ray: #1A2D55; --jelly-deep-snow: #9DB9EE;
+  --jelly-light-1: #182230; --jelly-light-2: #274C9B; --jelly-light-3: #4670C8; --jelly-light-4: #7397E0; --jelly-light-5: #A8BFEE; --jelly-light-6: #D6E0F5; --jelly-light-7: #FFFFFF; --jelly-light-8: #274C9B;
+  --jelly-light-halo: #DDE5F5; --jelly-light-ray: #E4ECFB; --jelly-light-snow: #9DB9EE;
+  --surface-fill-simple: #F8F6F2; --surface-fill-tech: #182230; --surface-foam-simple: #8FB0F0; --surface-foam-tech: #7EA2EC;
+  --surface-fill: var(--surface-fill-simple); --surface-foam: var(--surface-foam-simple);
+  --ascii-deep: #2C4270; --ascii-dim: #4668B0; --ascii-base: #7EA2EC; --ascii-bright: #C2D6FB; --ascii-hot: #FBFAF7;
+}
+/* Technical mode: dark surface from the manual's "texto en oscuro" pairing. */
+:root[data-mode="tecnico"] {
+  --surface-fill: var(--surface-fill-tech); --surface-foam: var(--surface-foam-tech);
+  --color-paper: #182230; --color-paper-2: #1E2B3F; --color-paper-3: #26354D;
+  --color-ink: #F8F6F2; --color-ink-2: #D2D8E3; --color-muted: #A6B0C2;
+  --color-rule: #34435C; --color-accent: #8FB0F0; --color-focus: #8FB0F0; --color-button: #3A62BB; --color-accent-ink: #182230;
+}

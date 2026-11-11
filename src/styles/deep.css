@@ -1,0 +1,36 @@
+/* Deep-water scope. The hero and the contact block sit in the water in both modes, so they carry their own
+   token set; text inside swaps colour on its own. */
+:root {
+  --water-a: #17305B; --water-b: #0B1424; --water-ta: #101E38; --water-tb: #080E19;
+  --deep-paper: #101B30; --deep-paper-2: #17253F; --deep-paper-3: #1F3150;
+  --deep-ink: #F8F6F2; --deep-ink-2: #D2D8E3; --deep-muted: #A6B0C2; --deep-rule: #2B3C5A;
+  --deep-accent: #8FB0F0; --deep-button: #3A62BB; --deep-accent-ink: #182230;
+  --wa-green: #15803D;
+  --water-top: var(--water-a); --water-bottom: var(--water-b);
+}
+html[data-mode="tecnico"] { --water-top: var(--water-ta); --water-bottom: var(--water-tb); }
+.deep {
+  --color-paper: var(--deep-paper); --color-paper-2: var(--deep-paper-2); --color-paper-3: var(--deep-paper-3);
+  --color-ink: var(--deep-ink); --color-ink-2: var(--deep-ink-2); --color-muted: var(--deep-muted); --color-rule: var(--deep-rule);
+  --color-accent: var(--deep-accent); --color-focus: var(--deep-accent); --color-button: var(--deep-button); --color-accent-ink: var(--deep-accent-ink);
+  background: linear-gradient(var(--water-top), var(--water-bottom));
+  color: var(--color-ink);
+}
+
+/* Voxel colour slots read by src/voxel/scene.ts. Brand blues and ivory, coral only as a tiny accent. */
+:root {
+  --vox-1: #274C9B; --vox-2: #3F6AC6; --vox-3: #7BA3F0; --vox-4: #CFDDF9; --vox-5: #F8F6F2;
+  --vox-6: #182230; --vox-7: #EA735B; --vox-8: #5A6B8C; --vox-9: #9DB9EE;
+}
+/* The Tijuana map uses real-world colours, not the brand blues. Order matters: src/voxel/town/palette.ts indexes these. */
+:root {
+  --town-1: #4A4D52; --town-2: #E8B923; --town-3: #BDB9AF; --town-4: #6A9A45; --town-5: #D9C27F;
+  --town-6: #CBD0D6; --town-7: #C98A6B; --town-8: #EADFC0; --town-9: #5A5C63; --town-10: #7FA6BE;
+  --town-11: #C8352C; --town-12: #F6F3EA; --town-13: #8A5A34; --town-14: #D9A37C; --town-15: #2F5FA8;
+  --town-16: #F2B705; --town-17: #A8957A; --town-18: #3F6E2D; --town-19: #1F2127; --town-20: #8E9AAA;
+  --town-21: #FF6A3D; --town-22: #E0A63A; --town-23: #DE8FA0; --town-24: #3E9C9A; --town-25: #E3CF9E;
+  --town-26: #3F86B5; --town-27: #2E6A99; --town-28: #E8F2F4; --town-29: #9B5A3C; --town-30: #E97B2B;
+  --town-31: #B07A55; --town-32: #7A5238; --town-33: #2A1D17; --town-34: #C94A4A; --town-35: #4E9A5B;
+  --town-36: #7E5BB0; --town-37: #3A5E8C; --town-38: #E6C84A; --town-39: #9B9C9A; --town-40: #2F5A24;
+  --town-41: #A9553B; --town-42: #D9BFA5; --town-43: #C9A06C; --town-44: #D7B58C;
+}

@@ -1,0 +1,172 @@
+// All page copy in Spanish. No dashes, no invented figures, clients or quotes. content.en.ts mirrors this shape.
+const negocio = {
+  heroTitle: 'Tecnología que conecta tu negocio.',
+  heroLede: 'Hacemos que tu página, tus reservas y tus mensajes trabajen juntos.',
+  problemasTitle: '¿Te suena familiar?',
+  problemas: [
+    ['Me escriben por WhatsApp a todas horas y se me pierden pedidos.', 'Un sistema de pedidos y mensajes que ordena todo por ti.'],
+    ['Mis clientes preguntan siempre lo mismo: horarios, precios, ubicación.', 'Un asistente con inteligencia artificial que contesta con la información de tu negocio.'],
+    ['Llevo reservas y cuentas en cuadernos y hojas sueltas.', 'Reservas y control en un solo lugar, siempre a la mano.'],
+    ['Mi página es vieja o casi nadie me encuentra en internet.', 'Una página rápida y clara, pensada para el celular.'],
+  ],
+  solucionesTitle: 'Menos tareas repetidas. Más tiempo para tus clientes.',
+  soluciones: [
+    ['Una página que trabaja por ti', 'Menú, horarios y ubicación, claros en el celular.'],
+    ['Reservas y pedidos', 'Tus clientes reservan o piden solos.'],
+    ['Mensajes y avisos', 'Confirmaciones y recordatorios automáticos.'],
+    ['Un asistente que responde', 'Contesta dudas con la información de tu negocio.'],
+    ['Apps para el celular', 'Tu negocio en la bolsa de tus clientes.'],
+    ['Cámaras que cuentan', 'Contar personas o revisar inventario con visión.'],
+  ],
+  paraQuienTitle: 'Restaurantes, gimnasios y negocios locales.',
+  paraQuien: [
+    ['Restaurantes', 'Tu cliente ve el menú, reserva mesa y pide desde el celular. Tú recibes todo ordenado.'],
+    ['Gimnasios', 'Tus socios reservan clase y reciben avisos de pago. Tú no persigues a nadie.'],
+    ['Negocios locales', 'Te encuentran en Google, te escriben y reservan sin llamadas.'],
+    ['Personas con un proyecto', 'Una idea que necesita página, app o automatización para arrancar bien.'],
+  ],
+  procesoTitle: 'Así trabajamos.',
+  proceso: [
+    ['Platicamos', 'Nos cuentas qué te quita tiempo y qué quieres lograr.'],
+    ['Proponemos', 'Qué haríamos, cuánto cuesta y cuánto tarda.'],
+    ['Construimos', 'Ves avances y ajustamos antes de terminar.'],
+    ['Te acompañamos', 'Seguimos cerca para cambios y mantenimiento.'],
+  ],
+  faqTitle: 'Lo que suelen preguntarnos.',
+  faq: [
+    ['¿Cuánto cuesta?', 'Depende de lo que necesites. En la primera charla te damos una propuesta con precio claro antes de empezar.'],
+    ['¿Cuánto tarda?', 'Depende del alcance. Antes de empezar acordamos fechas por escrito.'],
+    ['¿El sitio es mío?', 'Sí. Tu dominio, tu contenido y tu información son tuyos.'],
+    ['¿Necesito saber de tecnología?', 'No. Te explicamos todo en palabras sencillas y nos encargamos de lo técnico.'],
+    ['¿Qué pasa después de entregar?', 'Seguimos cerca: corregimos, mejoramos y damos mantenimiento si lo necesitas.'],
+  ],
+  fitcoreTitle: 'Un ejemplo de lo que construimos.',
+  fitcoreText: 'FitCore es una demo ficticia de un gimnasio: la página, el panel y el asistente trabajando juntos.',
+  fitcoreCta: 'Abrir la demo de FitCore',
+  fitcoreItems: [
+    ['Reservas con cupo', 'Cada clase se llena sola y avisa cuando ya no hay lugar.'],
+    ['Un asistente por WhatsApp', 'Contesta dudas y reserva clases con la información del gimnasio.'],
+    ['Avisos automáticos', 'Recordatorios de vencimiento y bienvenida sin escribirlos a mano.'],
+    ['Aforo con cámara', 'Cuenta personas para saber cuánta gente hay en el gimnasio.'],
+  ],
+  fitcoreAlt: ['Página pública de la demo FitCore, un gimnasio ficticio, con una persona entrenando.', 'Pantalla de acceso al panel de administración de FitCore.'],
+  fitcoreCredit: 'Capturas de la demo FitCore. Videos de cottonbro studio y Boris Ivas, Pexels.',
+  quienTitle: 'Un estudio pequeño, con trato directo.',
+  quienText: 'Hablas directo con quien diseña y programa tu proyecto.',
+}
+
+const quiz = {
+  title: '¿Qué necesita tu negocio?',
+  lede: 'Tres preguntas y te decimos por dónde empezar.',
+  steps: [
+    { legend: '¿Qué tipo de negocio tienes?', options: ['Restaurante', 'Gimnasio', 'Negocio local', 'Un proyecto propio'] },
+    { legend: '¿Qué te quita más tiempo?', options: ['Mensajes y pedidos', 'Reservas y citas', 'Preguntas repetidas', 'Que me encuentren'] },
+    { legend: '¿Qué quieres lograr?', options: ['Vender más', 'Ahorrar tiempo', 'Verme profesional'] },
+  ],
+  // for each answer of the second step: which entries of `negocio.soluciones` to recommend
+  recs: [[1, 2], [1, 0], [3, 2], [0, 3]],
+  resultTitle: 'Te recomendamos empezar por:',
+  cta: 'Hablemos con esta idea',
+  again: 'Empezar de nuevo',
+  message: 'Hola, tengo un negocio ({type}) y lo que más tiempo me quita: {time}. Quiero {goal}. Me interesa: {recs}.',
+}
+
+const tecnico = {
+  heroTitle: 'Así lo construimos.',
+  heroLede: 'El stack, el método y por qué cada pieza está ahí.',
+  stackTitle: 'Herramientas que conocemos a fondo.',
+  stack: [
+    ['Web', 'React, Next.js, Astro, Tailwind CSS', 'Sitios rápidos, bien posicionados y adaptables a cualquier pantalla.'],
+    ['Servidor y datos', 'Python, FastAPI, Node.js, PostgreSQL', 'APIs y bases de datos para reservas, inventarios y pedidos.'],
+    ['Inteligencia artificial', 'LLMs, RAG, embeddings, pgvector', 'Asistentes que responden con los documentos de tu negocio.'],
+    ['Móvil y visión', 'Flutter, React Native, OpenCV, YOLO', 'Apps para iOS y Android y cámaras que cuentan objetos.'],
+  ],
+  metodoTitle: 'Del problema al sistema funcionando.',
+  metodo: [
+    ['Descubrimiento', 'Mapeamos el proceso actual y dónde se pierde el tiempo.'],
+    ['Prototipo', 'Una versión mínima que se prueba con personas reales.'],
+    ['Construcción', 'Código versionado, pruebas y entregas pequeñas.'],
+    ['Despliegue', 'Servidor, dominio, respaldos y monitoreo.'],
+    ['Mantenimiento', 'Correcciones, mejoras y soporte continuo.'],
+  ],
+  chat: {
+    title: 'Asistente de ejemplo',
+    user: '¿Hay clase de yoga el sábado?',
+    bot: 'Sí, a las 9:00. Quedan 3 lugares.',
+    source: 'Fuente: horario de clases',
+    note: 'Ejemplo ficticio',
+  },
+  ragTitle: 'Cómo un asistente aprende de tu negocio.',
+  rag: [
+    ['Documentos', 'Menú, políticas y preguntas frecuentes.'],
+    ['Fragmentos', 'El texto se divide en partes pequeñas.'],
+    ['Embeddings', 'Cada parte se vuelve un vector con su significado.'],
+    ['pgvector', 'Los vectores viven en PostgreSQL y se buscan por cercanía.'],
+    ['Respuesta', 'El modelo redacta solo con lo encontrado y cita la fuente.'],
+  ],
+  fitcoreTitle: 'FitCore, la arquitectura en uso.',
+  fitcoreText: 'Las mismas piezas de este stack, trabajando juntas en una demo para gimnasios.',
+  fitcoreCta: 'Abrir la demo de FitCore',
+  fitcoreItems: [
+    ['Web y panel', 'Astro y React con Tailwind.'],
+    ['API y datos', 'Hono sobre Bun, PostgreSQL y pgvector.'],
+    ['Asistente', 'FastAPI y LiteLLM con RAG, atendiendo por WhatsApp.'],
+    ['Visión', 'MediaPipe cuenta personas para el aforo.'],
+    ['Acceso y tareas', 'Better Auth, Drizzle y un Worker de Cloudflare para lo programado.'],
+  ],
+  fitcoreAlt: ['Página pública de la demo FitCore.', 'Pantalla de acceso al panel de FitCore.'],
+  fitcoreCredit: 'Capturas de la demo FitCore. Videos de cottonbro studio y Boris Ivas, Pexels.',
+}
+
+const contacto = {
+  title: 'Platiquemos de tu negocio.',
+  lede: 'La primera charla es gratis y sin compromiso.',
+  messageLabel: '¿Qué te gustaría mejorar en tu negocio?',
+}
+
+
+const ui = {
+  skip: 'Saltar al contenido',
+  brandLabel: 'Quirelia Studio, inicio',
+  brandAlt: 'Quirelia Studio',
+  navLabel: 'Principal',
+  stageLabel: 'Presentación',
+  navSoluciones: 'Soluciones',
+  navProceso: 'Proceso',
+  navStack: 'Stack',
+  navMetodo: 'Método',
+  navContacto: 'Contacto',
+  navCta: 'Hablemos',
+  heroCta: 'Hablemos de tu proyecto',
+  heroHow: '¿Cómo lo hacemos?',
+  heroBack: 'Volver a lo simple',
+  mapZoomIn: 'Acercar el mapa',
+  mapZoomOut: 'Alejar el mapa',
+  mapReset: 'Ver todo el mapa',
+  fabTecnico: 'Ver el lado técnico',
+  fabNegocio: 'Ver la versión simple',
+  footerLine: 'Quirelia Studio. Tecnología que conecta tu negocio.',
+  ragLabel: 'Flujo de un asistente con RAG',
+  waLabel: 'Escríbenos por WhatsApp',
+  waFallbackLabel: 'Escríbenos',
+  waMessage: 'Hola, quiero platicar sobre mi proyecto.',
+  mailSubject: 'Proyecto con Quirelia Studio',
+  langSwitch: { short: 'EN', label: 'English', href: '/en/', hreflang: 'en' },
+}
+
+const form = {
+  name: 'Tu nombre',
+  how: 'Tu WhatsApp o correo',
+  send: 'Enviar mensaje',
+  sending: 'Enviando',
+  sent: 'Recibimos tu mensaje. Te respondemos pronto.',
+  errMissing: 'Falta tu nombre o tu mensaje.',
+  errContact: 'Escribe un correo o un número de WhatsApp para poder responderte.',
+  errEndpoint: 'No se pudo enviar. Intenta de nuevo o escríbenos por WhatsApp o correo.',
+  errNoChannel: 'Este formulario todavía no tiene un canal de envío configurado.',
+  nameLine: 'Nombre',
+  contactLine: 'Contacto',
+}
+
+export const es = { lang: 'es' as string, ui, form, negocio, tecnico, quiz, contacto }
+export type Copy = typeof es
