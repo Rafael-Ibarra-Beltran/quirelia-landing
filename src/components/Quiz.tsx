@@ -38,7 +38,7 @@ export function Quiz() {
           <h2 id="quiz-t">{q.title}</h2>
           <p className="lede">{q.lede}</p>
         </div>
-        <div className="quiz-panel" data-reveal aria-live="polite">
+        <div className="quiz-panel" data-reveal>
           {!done ? (
             <fieldset className="quiz-step">
               <legend ref={legend} tabIndex={-1}>{q.steps[step].legend}</legend>

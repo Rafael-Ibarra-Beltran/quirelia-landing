@@ -45,7 +45,7 @@ export function Contact() {
       setStatus('sending')
       setError('')
       try {
-        const res = await fetch(config.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name, contact: how, message: msg }) })
+        const res = await fetch(config.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ name, contact: how, message: msg }), signal: AbortSignal.timeout(10000) })
         if (!res.ok) throw new Error(String(res.status))
         setStatus('sent')
         form.reset()

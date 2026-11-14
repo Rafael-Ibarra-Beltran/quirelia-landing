@@ -1,0 +1,9 @@
+{
+  "name": "Quirelia Studio",
+  "short_name": "Quirelia",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#101B30",
+  "theme_color": "#101B30",
+  "icons": [{ "src": "/brand/favicon.png", "sizes": "any", "type": "image/png" }, { "src": "/brand/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }]
+}

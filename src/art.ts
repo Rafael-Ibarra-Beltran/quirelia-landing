@@ -123,11 +123,11 @@ async function logoScene(src: string, size: [number, number]) {
   ;(window as unknown as { ready: boolean }).ready = true
 }
 
-/** The jellyfish Q on a white rounded square, so it reads on dark browser tabs. */
+/** The jellyfish Q, in white, on a blue rounded square, so it reads on light and dark browser tabs. */
 async function faviconScene() {
   const ctx = out.getContext('2d')!
   const r = W * 0.22
-  ctx.fillStyle = '#ffffff'
+  ctx.fillStyle = '#274C9B'
   ctx.beginPath()
   ctx.roundRect(0, 0, W, H, r)
   ctx.fill()
@@ -136,7 +136,16 @@ async function faviconScene() {
   await img.decode()
   const m = W * 0.13
   const k = Math.min((W - 2 * m) / img.width, (H - 2 * m) / img.height)
-  ctx.drawImage(img, (W - img.width * k) / 2, (H - img.height * k) / 2, img.width * k, img.height * k)
+  // tint the symbol white on its own canvas so the blue square does not swallow it
+  const sym = document.createElement('canvas')
+  sym.width = Math.round(img.width * k)
+  sym.height = Math.round(img.height * k)
+  const sc = sym.getContext('2d')!
+  sc.drawImage(img, 0, 0, sym.width, sym.height)
+  sc.globalCompositeOperation = 'source-in'
+  sc.fillStyle = '#ffffff'
+  sc.fillRect(0, 0, sym.width, sym.height)
+  ctx.drawImage(sym, (W - sym.width) / 2, (H - sym.height) / 2)
   ;(window as unknown as { ready: boolean }).ready = true
 }
 
@@ -152,7 +161,7 @@ async function run() {
   document.body.appendChild(hold)
   const f = new Field(hold, [], { scheme: 'deep', rays: !scene.startsWith('og'), snow: 70 })
   f.resize(W, H, 1)
-  f.setJellies(scene.startsWith('og') ? og.map((j) => ({ ...j, r: j.r })) : heroLayout(W, H))
+  f.setJellies(scene.startsWith('og') ? og : heroLayout(W, H))
   await f.readTokens()
   for (let i = 0; i < 140; i++) f.update(3 + i / 30, 1 / 30)
   f.draw('pixel')
@@ -180,4 +189,6 @@ async function run() {
   }
   ;(window as unknown as { ready: boolean }).ready = true
 }
-void run()
+run().catch((e) => {
+  ;(window as unknown as { failed: string }).failed = String(e)
+})

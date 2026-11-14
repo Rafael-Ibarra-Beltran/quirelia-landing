@@ -9,6 +9,7 @@ import { config, primaryHref } from './config'
 import { es } from './content'
 import { en } from './content.en'
 import { CopyContext, useCopy } from './lang'
+import { Flag } from './components/Flags'
 
 const VoxelDiorama = lazy(() => import('./components/VoxelDiorama'))
 const VoxelTijuana = lazy(() => import('./components/VoxelTijuana'))
@@ -34,13 +35,15 @@ function readMode(): ModeName {
 }
 
 function Hero({ mode, title, lede, children }: { mode: ModeName; title: string; lede: string; children: React.ReactNode }) {
+  // Both views ship in the HTML but only the plain one is the page's h1; the technical view keeps the same look as an h2.
+  const Title = mode === 'negocio' ? 'h1' : 'h2'
   return (
     <div className="hero-copy">
-      <h1 tabIndex={-1} id={`h1-${mode}`}>
+      <Title className="hero-title" tabIndex={-1} id={`h1-${mode}`}>
         {title.split(' ').map((w, i) => (
           <span className="w" style={{ '--i': i } as CSSProperties} key={i}>{w} </span>
         ))}
-      </h1>
+      </Title>
       <p className="lede">{lede}</p>
       <div className="actions">{children}</div>
     </div>
@@ -57,12 +60,12 @@ interface ShowcaseCopy {
 }
 
 /** The FitCore case: real captures of the demo and only what it really does. */
-function Showcase({ c }: { c: ShowcaseCopy }) {
+function Showcase({ c, id }: { c: ShowcaseCopy; id: string }) {
   return (
-    <section className="section" id="fitcore" aria-labelledby="fitcore-t">
+    <section className="section" id={id} aria-labelledby={`${id}-t`}>
       <div className="container showcase">
         <div className="showcase-text" data-reveal>
-          <h2 id="fitcore-t">{c.fitcoreTitle}</h2>
+          <h2 id={`${id}-t`}>{c.fitcoreTitle}</h2>
           <p className="lede">{c.fitcoreText}</p>
           <ul className="showcase-list">
             {c.fitcoreItems.map(([h, p]) => (
@@ -106,13 +109,17 @@ function ModeFab({ mode, busy, onGo }: { mode: ModeName; busy: boolean; onGo: (n
       onClick={(e) => onGo(next, e)}
       aria-disabled={busy}
       tabIndex={show ? 0 : -1}
+      aria-hidden={!show}
     >
       {next === 'tecnico' ? ui.fabTecnico : ui.fabNegocio}
     </a>
   )
 }
 
-export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches
+
+export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }) {
+  const [lang, setLang] = useState<'es' | 'en'>(initialLang)
   const c = lang === 'en' ? en : es
   const { negocio: n, tecnico: t, ui } = c
   const home = lang === 'en' ? '/en/' : '/'
@@ -138,7 +145,7 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
     const watch = () => document.querySelectorAll('[data-reveal]:not(.in)').forEach((el) => io.observe(el))
     watch()
     const mo = new MutationObserver(watch)
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] })
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode', 'lang'] })
     const safety = setTimeout(() => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('in')), 6000)
     return () => {
       io.disconnect()
@@ -174,6 +181,47 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
     [busy, mode],
   )
 
+  // Swap the language in place: fade the copy out, change it, fade it back in. The href still works without JS.
+  const switchLang = useCallback(
+    (e: MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+      e.preventDefault()
+      const next = lang === 'es' ? 'en' : 'es'
+      const html = document.documentElement
+      if (html.dataset.langSwitching) return
+      const apply = () => {
+        const dest = new URL(next === 'en' ? '/en/' : '/', location.href)
+        dest.search = location.search
+        history.pushState(null, '', dest)
+        setLang(next)
+      }
+      if (reduced()) return apply()
+      html.dataset.langSwitching = 'out'
+      setTimeout(() => {
+        apply()
+        requestAnimationFrame(() => {
+          html.dataset.langSwitching = 'in'
+          setTimeout(() => delete html.dataset.langSwitching, 700)
+        })
+      }, 240)
+    },
+    [lang],
+  )
+
+  // keep <html lang>, title and description in step with the language
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.title = ui.docTitle
+    document.querySelector('meta[name="description"]')?.setAttribute('content', ui.docDesc)
+  }, [lang, ui])
+
+  // back/forward between / and /en/
+  useEffect(() => {
+    const onPop = () => setLang(location.pathname.startsWith('/en') ? 'en' : 'es')
+    addEventListener('popstate', onPop)
+    return () => removeEventListener('popstate', onPop)
+  }, [])
+
   const nav = (
     <header className="nav">
       <div className="container nav-row">
@@ -184,7 +232,7 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
           <span data-view="negocio"><a href="#soluciones">{ui.navSoluciones}</a><a href="#proceso">{ui.navProceso}</a></span>
           <span data-view="tecnico"><a href="#stack">{ui.navStack}</a><a href="#metodo">{ui.navMetodo}</a></span>
           <a href="#contacto">{ui.navContacto}</a>
-          <a className="lang" href={ui.langSwitch.href} hrefLang={ui.langSwitch.hreflang} lang={ui.langSwitch.hreflang} title={ui.langSwitch.label} onClick={(e) => { if (mode === 'tecnico') { e.preventDefault(); location.href = `${ui.langSwitch.href}?modo=tecnico` } }}>{ui.langSwitch.short}</a>
+          <a className="lang" href={ui.langSwitch.href} hrefLang={ui.langSwitch.hreflang} lang={ui.langSwitch.hreflang} title={ui.langSwitch.label} onClick={switchLang}><Flag lang={ui.langSwitch.hreflang as 'es' | 'en'} />{ui.langSwitch.short}</a>
           <a className="btn btn-primary btn-sm" href={primaryHref(ui)}>{ui.navCta}</a>
         </nav>
       </div>
@@ -247,16 +295,16 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
               <h2 id="para-t" data-reveal>{n.paraQuienTitle}</h2>
               <div className="town">
                 <div className="diorama-wrap town-map" ref={townBox} data-reveal>
-                  <img className="diorama-fallback" src="/art/tijuana.png" alt="" width="1600" height="800" loading="lazy" />
+                  <img className="diorama-fallback" src="/art/tijuana.png" alt={ui.mapAlt} width="1600" height="800" loading="lazy" />
                   <Suspense fallback={null}>{showTown && <VoxelTijuana focus={place} />}</Suspense>
                 </div>
                 <ul className="who town-list" onMouseLeave={() => setHover(null)}>
                   {n.paraQuien.map(([h, p], i) => (
                     <li key={h} data-reveal data-lit={place === i} onMouseEnter={() => setHover(i)}>
-                      <button type="button" aria-pressed={pinned === i} onFocus={() => setHover(i)} onBlur={() => setHover(null)} onClick={() => setPinned(pinned === i ? null : i)}>
-                        <h3>{h}</h3>
-                        <p>{p}</p>
-                      </button>
+                      <h3>
+                        <button type="button" aria-pressed={pinned === i} onFocus={() => setHover(i)} onBlur={() => setHover(null)} onClick={() => setPinned(pinned === i ? null : i)}>{h}</button>
+                      </h3>
+                      <p>{p}</p>
                     </li>
                   ))}
                 </ul>
@@ -268,7 +316,7 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
 
           <Process title={n.procesoTitle} steps={n.proceso} />
 
-          <Showcase c={n} />
+          <Showcase c={n} id="fitcore" />
 
           <section className="section" aria-labelledby="faq-t">
             <div className="container faq">
@@ -291,7 +339,7 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
             <div className="container">
               <h2 id="stack-t" data-reveal>{t.stackTitle}</h2>
               <div className="diorama-wrap" ref={dioramaBox} data-reveal>
-                <img className="diorama-fallback" src="/art/diorama.png" alt="" width="1000" height="560" loading="lazy" />
+                <img className="diorama-fallback" src="/art/diorama.png" alt={ui.stackAlt} width="1000" height="560" loading="lazy" />
                 <Suspense fallback={null}>{showDiorama && <VoxelDiorama active={null} onHover={setPick} />}</Suspense>
               </div>
               <ul className="who stack">
@@ -321,8 +369,11 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
             <div className="container">
               <div className="rag-head">
                 <h2 id="rag-t" data-reveal>{t.ragTitle}</h2>
-                <div className="phone-wrap" ref={phoneBox} aria-hidden="true">
-                  <Suspense fallback={null}>{showPhone && <VoxelPhone chat={t.chat} />}</Suspense>
+                <div className="phone-wrap" ref={phoneBox}>
+                  <p className="visually-hidden">{t.chat.title}: {t.chat.user} {t.chat.bot} ({t.chat.source}). {t.chat.note}.</p>
+                  <div aria-hidden="true">
+                    <Suspense fallback={null}>{showPhone && <VoxelPhone chat={t.chat} />}</Suspense>
+                  </div>
                 </div>
               </div>
               <div className="pipeline-wrap" data-reveal>
@@ -336,7 +387,7 @@ export default function App({ lang = 'es' }: { lang?: 'es' | 'en' }) {
             </div>
           </section>
 
-          <Showcase c={t} />
+          <Showcase c={t} id="fitcore-tecnico" />
         </div>
 
         <Contact />

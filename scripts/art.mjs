@@ -17,7 +17,9 @@ for (const [scene, name] of scenes) {
   if (only && !only.some((o) => name.startsWith(o))) continue
   const page = await browser.newPage({ viewport: scene === 'tijuana' ? { width: 2500, height: 1300 } : { width: 1500, height: 960 } })
   await page.goto(`${base}/art.html?scene=${scene}`)
-  await page.waitForFunction(() => window.ready === true, null, { timeout: 60000 })
+  await page.waitForFunction(() => window.ready === true || window.failed, null, { timeout: 60000 })
+  const failed = await page.evaluate(() => window.failed)
+  if (failed) throw new Error(`scene ${scene} failed: ${failed}`)
   const file = name.includes('/') ? `public/${name}.png` : `public/art/${name}.png`
   await page.locator('#out').screenshot({ path: file, omitBackground: true })
   console.log('wrote', file)

@@ -44,6 +44,7 @@ export interface JellyState extends JellySpec {
   tilt: number
   spin: number
   init: boolean
+  sy: number
   strands: Strand[]
 }
 
@@ -130,7 +131,7 @@ function makeStrands(sp: Species, seed: number): Strand[] {
 }
 
 export function makeState(spec: JellySpec, index: number): JellyState {
-  return { ...spec, px: 0, py: 0, ox: 0, oy: 0, vx: 0, vy: 0, ph: spec.phase, boost: 0, f1x: 0, f1y: 0, f2x: 0, f2y: 0, tilt: 0, spin: spec.phase, init: false, strands: makeStrands(spec.species, spec.phase + index * 0.37) }
+  return { ...spec, px: 0, py: 0, ox: 0, oy: 0, vx: 0, vy: 0, ph: spec.phase, boost: 0, f1x: 0, f1y: 0, f2x: 0, f2y: 0, tilt: 0, spin: spec.phase, init: false, sy: 0, strands: makeStrands(spec.species, spec.phase + index * 0.37) }
 }
 
 // scratch buffers, rebuilt for every jelly

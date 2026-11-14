@@ -301,10 +301,16 @@ export class Field {
         j.init = true
         j.f1x = j.f2x = j.px
         j.f1y = j.f2y = j.py
+        j.sy = this.scroll * (0.08 + 0.35 * j.depth)
         j.tilt = target
       }
       j.tilt += (target - j.tilt) * Math.min(1, dt * 2)
       j.spin = j.phase + t * 0.045 * slow
+      // the scroll parallax moves the bell; shift the followers with it so the strands neither stretch nor pin against the clamp
+      const so = this.scroll * (0.08 + 0.35 * j.depth)
+      j.f1y -= so - j.sy
+      j.f2y -= so - j.sy
+      j.sy = so
       j.f1x += (j.px - j.f1x) * k1
       j.f1y += (j.py - j.f1y) * k1
       j.f2x += (j.px - j.f2x) * k2
