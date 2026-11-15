@@ -9,7 +9,7 @@
 
 **Tecnología que conecta tu negocio.**
 
-Sitio web bilingüe de Quirelia Studio, un estudio de software de Tijuana, Baja California: páginas web, reservas, mensajes automáticos y asistentes con IA para restaurantes, gimnasios y negocios locales.
+Sitio web de Quirelia Studio, un estudio de software de Tijuana, Baja California: páginas web, reservas, mensajes automáticos y asistentes con IA para restaurantes, gimnasios y negocios locales.
 
 ![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)
@@ -24,15 +24,15 @@ Sitio web bilingüe de Quirelia Studio, un estudio de software de Tijuana, Baja 
 
 ## Descripción
 
-Landing page en español e inglés que presenta los servicios del estudio, su método de trabajo, un cuestionario para orientar al cliente, preguntas frecuentes y un formulario de contacto. La identidad visual gira en torno a una medusa: la portada es un acuario de medusas generadas en tiempo real y el resto de las secciones usan escenas *voxel* (estilo cubos).
+Landing page en español que presenta los servicios del estudio, su método de trabajo, un cuestionario para orientar al cliente, preguntas frecuentes y un formulario de contacto. La identidad visual gira en torno a una medusa: la portada es un acuario de medusas generadas en tiempo real y el resto de las secciones usan escenas *voxel* (estilo cubos).
 
 ### Características
 
 - **Dos modos de lectura.** La misma página se cuenta de forma sencilla para dueños de negocio (modo *negocio*) y de forma técnica para equipos de desarrollo (modo *técnico*, `?modo=tecnico`). Al cambiar, las medusas pasan de pixel art a ASCII.
-- **Bilingüe.** Español (`/`) e inglés (`/en/`), con textos separados en `src/content.ts` y `src/content.en.ts`.
+- **Textos en un solo lugar.** Todo el contenido vive en `src/content.ts`, separado de los componentes.
 - **Ilustración generativa.** Las medusas se dibujan en un motor propio sobre canvas y los dioramas con Three.js: casi no hay imágenes pesadas.
-- **Funciona sin JavaScript.** El build prerenderiza el HTML de ambas versiones (SSR), así que el contenido se ve al instante y los buscadores lo leen completo.
-- **SEO.** Canonical, `hreflang`, Open Graph y Twitter Cards, datos estructurados JSON-LD (negocio, sitio y FAQ), `sitemap.xml` y `robots.txt` generados en el build.
+- **Funciona sin JavaScript.** El build prerenderiza el HTML (SSR), así que el contenido se ve al instante y los buscadores lo leen completo.
+- **SEO.** Canonical, Open Graph y Twitter Cards, datos estructurados JSON-LD (negocio, sitio y FAQ), `sitemap.xml` y `robots.txt` generados en el build.
 - **Accesible.** Navegación por teclado, enlace para saltar al contenido, respeto de `prefers-reduced-motion` y texto alternativo para las escenas decorativas.
 - **Seguro por defecto.** Cabeceras de seguridad y una política CSP estricta en `public/_headers`.
 - **Sin contactos inventados.** WhatsApp, correo y formulario salen de un único archivo de configuración; si faltan, la página lo maneja sin mostrar datos falsos.
@@ -77,7 +77,7 @@ Landing page en español e inglés que presenta los servicios del estudio, su m�
 | Tipografías | Sora, DM Sans y JetBrains Mono, vía [Fontsource](https://fontsource.org) (autoalojadas) |
 | Calidad | [oxlint](https://oxc.rs/docs/guide/usage/linter), `tsc` y `bun test` |
 | Herramientas | [Bun](https://bun.sh) y [Playwright](https://playwright.dev) (capturas y generación de arte) |
-| Despliegue | Sitio estático con cabeceras en `public/_headers` (Netlify, Cloudflare Pages) |
+| Despliegue | Sitio estático en [Cloudflare Pages](https://pages.cloudflare.com), con cabeceras en `public/_headers` |
 
 ## Estructura del proyecto
 
@@ -98,8 +98,7 @@ Landing page en español e inglés que presenta los servicios del estudio, su m�
     ├── engine/         # Motor de medusas: campo, especies, paleta
     ├── voxel/          # Modelos, animaciones y escenas voxel (incluye town/)
     ├── config.ts       # Datos de contacto y enlaces
-    ├── content.ts      # Textos en español
-    └── content.en.ts   # Textos en inglés
+    └── content.ts      # Textos en español
 ```
 
 ## Puesta en marcha
@@ -115,7 +114,7 @@ bun run lint       # oxlint
 bun run test       # pruebas
 ```
 
-El build **exige** la variable `VITE_SITE_URL` (URL final sin diagonal final): con ella se generan canonical, `hreflang`, `og:image` y el sitemap, y sin ella el build falla. Copia `.env.example` a `.env` y ajústala:
+El build **exige** la variable `VITE_SITE_URL` (URL final sin diagonal final): con ella se generan canonical, `og:image` y el sitemap, y sin ella el build falla. Copia `.env.example` a `.env` y ajústala:
 
 ```bash
 cp .env.example .env
@@ -127,7 +126,7 @@ Los datos de contacto viven en [`src/config.ts`](src/config.ts):
 
 | Clave | Descripción |
 | --- | --- |
-| `whatsapp` | Número con código de país, solo dígitos (ej. `5216641234567`) |
+| `whatsapp` | Número con código de país, solo dígitos (`52` + 10 dígitos, ej. `526641234567`) |
 | `email` | Correo de contacto |
 | `formEndpoint` | URL tipo Formspree que acepta un POST en JSON |
 | `fitcoreUrl` | Si se define, aparece el botón de la demo de FitCore en su sección |
@@ -137,9 +136,19 @@ La acción principal de la página usa WhatsApp, luego el correo y, si ninguno e
 
 ## Despliegue
 
-`bun run build` deja el sitio estático en `dist/`; súbelo a cualquier hosting estático. `public/_headers` funciona tal cual en Netlify y Cloudflare Pages. Dos detalles de la política CSP:
+El sitio se publica en **Cloudflare Pages**, conectado a la rama `main`: cada push dispara un build y un deploy.
 
-- El hash `sha256` autoriza el script en línea de `index.html`: recalcúlalo si ese script cambia.
+| Ajuste | Valor |
+| --- | --- |
+| Build command | `bun install && bun run build` |
+| Build output directory | `dist` |
+| Variable de entorno | `VITE_SITE_URL=https://quirelia.mx` (sin diagonal final) |
+
+El DNS de `quirelia.mx` está en Cloudflare y el dominio se agrega en Pages → *Custom domains*. El correo del dominio es externo, así que los registros `MX`, SPF, DKIM y `autoconfig`/`autodiscover` deben quedar en *DNS only* (sin proxy).
+
+Notas:
+
+- `public/_headers` define caché y la política CSP. El hash `sha256` autoriza el script en línea de `index.html`: recalcúlalo si ese script cambia.
 - Si defines `formEndpoint`, añade su origen a `connect-src`.
 
 ## Regenerar imágenes y capturas
@@ -157,7 +166,7 @@ Las capturas de `docs/screenshots` se toman con `scripts/shot.mjs`, por ejemplo:
 bun scripts/shot.mjs http://localhost:4173/ docs/screenshots/desktop-hero.png --w 1440 --h 900
 ```
 
-Ambos scripts usan un navegador Chromium headless; indica su ruta con la variable `BROWSER_PATH` si no es la predeterminada.
+Ambos scripts usan un navegador Chromium headless. La ruta por defecto es la del equipo del autor: indica la tuya con la variable `BROWSER_PATH`.
 
 ## Licencia
 

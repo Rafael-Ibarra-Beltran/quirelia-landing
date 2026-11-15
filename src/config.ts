@@ -1,7 +1,7 @@
 // Everything the owner still has to supply. Empty values are handled: the page never shows an invented contact.
 export const config = {
-  whatsapp: '', // digits only with country code, for example '5216641234567'
-  email: 'contacto@quirelia.mx', // for example 'hola@quirelia.studio'
+  whatsapp: '526634202392', // digits only with country code
+  email: 'contacto@quirelia.mx',
   formEndpoint: '', // a Formspree-style URL that accepts a JSON POST
   fitcoreUrl: '', // when set, the FitCore section shows its demo button
   sameAs: [] as string[], // public profiles for search engines: LinkedIn, Instagram, GitHub, Google Business Profile
