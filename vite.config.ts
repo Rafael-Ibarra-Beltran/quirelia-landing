@@ -22,5 +22,6 @@ const preloadFonts = (): Plugin => ({
 // https://vite.dev/config/
 export default defineConfig(({ isSsrBuild, mode }) => ({
   plugins: [react(), siteUrl((loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_URL ?? '').replace(/\/$/, '')), preloadFonts()],
-  build: isSsrBuild ? {} : { rollupOptions: { input: { main: resolve(import.meta.dirname, 'index.html'), en: resolve(import.meta.dirname, 'en/index.html') } } },
+  // Fonts stay files: Vite would inline the small subsets as data: URIs, which the CSP (font-src 'self') blocks.
+  build: isSsrBuild ? {} : { assetsInlineLimit: (file) => (/\.woff2?$/.test(file) ? false : undefined), rollupOptions: { input: { main: resolve(import.meta.dirname, 'index.html'), en: resolve(import.meta.dirname, 'en/index.html') } } },
 }))

@@ -218,7 +218,7 @@ export default function VoxelTijuana({ focus }: Props) {
   return (
     <>
       <div ref={box} className="diorama" />
-      <div className="map-zoom">
+      <div className="map-zoom" role="group" aria-label={ui.mapControls}>
         <button type="button" aria-label={ui.mapZoomIn} title={ui.mapZoomIn} onClick={() => api.current.zoom(1.4)}>+</button>
         <button type="button" aria-label={ui.mapZoomOut} title={ui.mapZoomOut} onClick={() => api.current.zoom(1 / 1.4)}>−</button>
         <button type="button" aria-label={ui.mapReset} title={ui.mapReset} onClick={() => api.current.reset()}>

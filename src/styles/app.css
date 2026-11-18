@@ -26,7 +26,17 @@ html.js[data-switching="out"] .fade { opacity: 0; }
 html.js [data-reveal]:not(.in) { opacity: 0; transform: translateY(28px); }
 [data-reveal] { transition: opacity 420ms var(--ease-out), transform 420ms var(--ease-out); }
 @keyframes rise { from { opacity: 0; transform: translateY(0.35em); } to { opacity: 1; transform: none; } }
-.w { display: inline-block; margin-right: 0.26em; animation: rise 760ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 80ms + 120ms); }
+.w { display: inline-block; margin-right: 0.26em; animation: rise 760ms var(--ease-out) backwards; animation-delay: 120ms; }
+/* Staggered entrance: 80ms per word. Written as rules, not an inline style="--i", so the CSP needs no 'unsafe-inline'. */
+.w:nth-child(2) { animation-delay: 200ms; }
+.w:nth-child(3) { animation-delay: 280ms; }
+.w:nth-child(4) { animation-delay: 360ms; }
+.w:nth-child(5) { animation-delay: 440ms; }
+.w:nth-child(6) { animation-delay: 520ms; }
+.w:nth-child(7) { animation-delay: 600ms; }
+.w:nth-child(8) { animation-delay: 680ms; }
+.w:nth-child(9) { animation-delay: 760ms; }
+.w:nth-child(10) { animation-delay: 840ms; }
 html[data-entering] .hero-copy > *, html[data-entering] [data-view] > section { animation: rise 520ms var(--ease-out) backwards; }
 html[data-entering] .hero-copy > :nth-child(2) { animation-delay: 90ms; }
 html[data-entering] .hero-copy > :nth-child(3) { animation-delay: 180ms; }
@@ -65,7 +75,7 @@ html[data-lang-switching="in"] :is(p, summary, label, figcaption) { animation-de
 
 /* Hero stage: a full-screen aquarium */
 .stage { position: relative; isolation: isolate; display: flex; align-items: center; min-height: min(820px, 100svh); padding-top: calc(var(--nav-h) + 40px); }
-html:not(.js) .stage { background: var(--water-top) url("/art/hero-poster.png") center / cover no-repeat; }
+html:not(.js) .stage { background: var(--water-top) url("/art/hero-poster.webp") center / cover no-repeat; }
 .stage-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .stage-copy { position: relative; z-index: 2; }
 .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-lg); max-width: 36rem; }
@@ -87,6 +97,7 @@ html:not(.js) .stage { background: var(--water-top) url("/art/hero-poster.png") 
 .showcase-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-md); }
 .showcase-list h3 { font-size: var(--text-lg); margin-bottom: var(--space-3xs); }
 .showcase-list p { color: var(--color-ink-2); }
+.showcase-note { color: var(--color-ink-2); font-size: var(--text-sm); max-width: 48ch; }
 .shots { position: relative; margin: 0 0 var(--space-xl); }
 .shots img { display: block; border-radius: var(--radius-card); border: 1px solid var(--color-rule); }
 .shot-main { width: 100%; height: auto; }

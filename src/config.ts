@@ -1,9 +1,10 @@
-// Everything the owner still has to supply. Empty values are handled: the page never shows an invented contact.
+// Contact points and demo links the owner supplies. Empty values are handled: the page never shows an invented contact or an empty demo button.
 export const config = {
   whatsapp: '526634202392', // digits only with country code
   email: 'contacto@quirelia.mx',
   formEndpoint: '', // a Formspree-style URL that accepts a JSON POST
-  fitcoreUrl: '', // when set, the FitCore section shows its demo button
+  fitcoreUrl: 'https://fitcore.quirelia.mx/', // FitCore demo landing; when empty its button is hidden
+  fitcoreAdminUrl: 'https://app.fitcore.quirelia.mx/', // FitCore demo admin panel; when empty its button is hidden
   sameAs: [] as string[], // public profiles for search engines: LinkedIn, Instagram, GitHub, Google Business Profile
 }
 

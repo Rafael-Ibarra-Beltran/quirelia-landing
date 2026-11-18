@@ -160,6 +160,8 @@ bun run dev        # en una terminal
 bun run art        # en otra; opcional: ONLY=hero,diorama para limitar las escenas
 ```
 
+`bun run art` escribe PNG. Después, `bun run images` (necesita ImageMagick con WebP y AVIF) los convierte a los formatos que sirve la página (AVIF y WebP en varios anchos para el mapa, WebP para iconos, diorama, póster y logo) y lista los PNG que quedan sin uso, para que los borres.
+
 Las capturas de `docs/screenshots` se toman con `scripts/shot.mjs`, por ejemplo:
 
 ```bash

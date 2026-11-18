@@ -18,6 +18,7 @@ export function Contact() {
   const { contacto, negocio, form: f, ui } = useCopy()
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState('')
+  const [bad, setBad] = useState<string[]>([]) // ids of the fields the last check rejected
 
   // the quiz sends its summary here when there is no WhatsApp number yet
   useEffect(() => {
@@ -34,11 +35,12 @@ export function Contact() {
     const form = e.currentTarget
     const data = new FormData(form)
     if (data.get('empresa')) return // honeypot: bots fill it
+    setBad([])
     const name = String(data.get('nombre') ?? '').trim()
     const how = String(data.get('contacto') ?? '').trim()
     const msg = String(data.get('mensaje') ?? '').trim()
-    if (!name || !msg) return fail(f.errMissing)
-    if (!how.includes('@') && how.replace(/\D/g, '').length < 8) return fail(f.errContact)
+    if (!name || !msg) return fail(f.errMissing, [!name && 'f-nombre', !msg && 'f-mensaje'])
+    if (!how.includes('@') && how.replace(/\D/g, '').length < 8) return fail(f.errContact, ['f-contacto'])
 
     const text = `${msg}\n\n${f.nameLine}: ${name}\n${f.contactLine}: ${how}`
     if (config.formEndpoint) {
@@ -59,10 +61,15 @@ export function Contact() {
     else if (config.whatsapp) window.location.href = `https://wa.me/${config.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
     else fail(f.errNoChannel)
   }
-  function fail(m: string) {
+  /** Shows the message, marks the rejected fields and moves focus to the first one. */
+  function fail(m: string, ids: (string | false)[] = []) {
+    const fields = ids.filter((id): id is string => !!id)
     setStatus('error')
     setError(m)
+    setBad(fields)
+    if (fields.length) document.getElementById(fields[0])?.focus()
   }
+  const flag = (id: string) => ({ 'aria-invalid': bad.includes(id) || undefined, 'aria-describedby': bad.includes(id) ? 'form-msg' : undefined })
 
   return (
     <section className="section deep contact-sec" id="contacto" aria-labelledby="contacto-t">
@@ -80,15 +87,15 @@ export function Contact() {
           <form className="form" onSubmit={submit} noValidate aria-describedby={error ? 'form-msg' : undefined}>
             <div className="field">
               <label htmlFor="f-nombre">{f.name}</label>
-              <input id="f-nombre" name="nombre" autoComplete="name" required />
+              <input id="f-nombre" name="nombre" autoComplete="name" required {...flag('f-nombre')} />
             </div>
             <div className="field">
               <label htmlFor="f-contacto">{f.how}</label>
-              <input id="f-contacto" name="contacto" autoComplete="email" required />
+              <input id="f-contacto" name="contacto" autoComplete="email" required {...flag('f-contacto')} />
             </div>
             <div className="field">
               <label htmlFor="f-mensaje">{contacto.messageLabel}</label>
-              <textarea id="f-mensaje" name="mensaje" rows={4} required />
+              <textarea id="f-mensaje" name="mensaje" rows={4} required {...flag('f-mensaje')} />
             </div>
             <input className="hp" name="empresa" tabIndex={-1} autoComplete="off" aria-hidden="true" />
             <button className="btn btn-primary" type="submit" disabled={status === 'sending'} aria-busy={status === 'sending'}>

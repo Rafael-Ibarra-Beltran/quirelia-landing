@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type MouseEvent } from 'react'
 import { Stage, type ModeName, type StageHandle } from './components/Stage'
 import { Contact } from './components/Contact'
 import { Process } from './components/Process'
@@ -16,6 +16,11 @@ const VoxelTijuana = lazy(() => import('./components/VoxelTijuana'))
 const VoxelPhone = lazy(() => import('./components/VoxelPhone'))
 
 const ICONS = ['web', 'calendar', 'chat', 'robot', 'phone', 'camera']
+
+// The Tijuana map ships in four widths (public/art/tijuana-<w>.avif|webp, made by scripts/images.sh). The box is at most 1112px wide.
+const TOWN_WIDTHS = [800, 1200, 1600, 2400]
+const townSet = (ext: string) => TOWN_WIDTHS.map((w) => `/art/tijuana-${w}.${ext} ${w}w`).join(', ')
+const TOWN_SIZES = '(min-width: 1240px) 1112px, 100vw'
 
 /** True once the element has come within 300px of the viewport (and stays true). Used to load three.js on demand. */
 function useNear(ref: React.RefObject<HTMLElement | null>) {
@@ -41,7 +46,7 @@ function Hero({ mode, title, lede, children }: { mode: ModeName; title: string; 
     <div className="hero-copy">
       <Title className="hero-title" tabIndex={-1} id={`h1-${mode}`}>
         {title.split(' ').map((w, i) => (
-          <span className="w" style={{ '--i': i } as CSSProperties} key={i}>{w} </span>
+          <span className="w" key={i}>{w} </span>
         ))}
       </Title>
       <p className="lede">{lede}</p>
@@ -54,6 +59,8 @@ interface ShowcaseCopy {
   fitcoreTitle: string
   fitcoreText: string
   fitcoreCta: string
+  fitcoreAdminCta: string
+  fitcoreNote: string
   fitcoreItems: string[][]
   fitcoreAlt: string[]
   fitcoreCredit: string
@@ -75,7 +82,15 @@ function Showcase({ c, id }: { c: ShowcaseCopy; id: string }) {
               </li>
             ))}
           </ul>
-          {config.fitcoreUrl && <a className="btn btn-primary" href={config.fitcoreUrl} target="_blank" rel="noreferrer">{c.fitcoreCta}</a>}
+          {(config.fitcoreUrl || config.fitcoreAdminUrl) && (
+            <>
+              <div className="actions">
+                {config.fitcoreUrl && <a className="btn btn-primary" href={config.fitcoreUrl} target="_blank" rel="noopener" aria-describedby={`${id}-note`}>{c.fitcoreCta}</a>}
+                {config.fitcoreAdminUrl && <a className="btn btn-secondary" href={config.fitcoreAdminUrl} target="_blank" rel="noopener" aria-describedby={`${id}-note`}>{c.fitcoreAdminCta}</a>}
+              </div>
+              <p className="showcase-note" id={`${id}-note`}>{c.fitcoreNote}</p>
+            </>
+          )}
         </div>
         <figure className="shots" data-reveal>
           <img className="shot-main" src="/art/fitcore-landing.webp" alt={c.fitcoreAlt[0]} width="1200" height="750" loading="lazy" />
@@ -226,7 +241,7 @@ export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }
     <header className="nav">
       <div className="container nav-row">
         <a className="brand" href={home} aria-label={ui.brandLabel}>
-          <img src="/brand/logo-light.png" width="168" height="56" alt={ui.brandAlt} />
+          <img src="/brand/logo-light.webp" width="168" height="56" alt={ui.brandAlt} />
         </a>
         <nav aria-label={ui.navLabel} className="nav-links">
           <span data-view="negocio"><a href="#soluciones">{ui.navSoluciones}</a><a href="#proceso">{ui.navProceso}</a></span>
@@ -279,7 +294,7 @@ export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }
               <ul className="sol">
                 {n.soluciones.map(([h, p], i) => (
                   <li key={h} data-reveal>
-                    <img src={`/art/icon-${ICONS[i]}.png`} width="88" height="88" alt="" loading="lazy" />
+                    <img src={`/art/icon-${ICONS[i]}.webp`} width="88" height="88" alt="" loading="lazy" />
                     <div>
                       <h3>{h}</h3>
                       <p>{p}</p>
@@ -295,7 +310,10 @@ export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }
               <h2 id="para-t" data-reveal>{n.paraQuienTitle}</h2>
               <div className="town">
                 <div className="diorama-wrap town-map" ref={townBox} data-reveal>
-                  <img className="diorama-fallback" src="/art/tijuana.png" alt={ui.mapAlt} width="1600" height="800" loading="lazy" />
+                  <picture>
+                    <source type="image/avif" srcSet={townSet('avif')} sizes={TOWN_SIZES} />
+                    <img className="diorama-fallback" src="/art/tijuana-1200.webp" srcSet={townSet('webp')} sizes={TOWN_SIZES} alt={ui.mapAlt} width="1600" height="800" loading="lazy" />
+                  </picture>
                   <Suspense fallback={null}>{showTown && <VoxelTijuana focus={place} />}</Suspense>
                 </div>
                 <ul className="who town-list" onMouseLeave={() => setHover(null)}>
@@ -339,7 +357,7 @@ export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }
             <div className="container">
               <h2 id="stack-t" data-reveal>{t.stackTitle}</h2>
               <div className="diorama-wrap" ref={dioramaBox} data-reveal>
-                <img className="diorama-fallback" src="/art/diorama.png" alt={ui.stackAlt} width="1000" height="560" loading="lazy" />
+                <img className="diorama-fallback" src="/art/diorama.webp" alt={ui.stackAlt} width="1000" height="560" loading="lazy" />
                 <Suspense fallback={null}>{showDiorama && <VoxelDiorama active={null} onHover={setPick} />}</Suspense>
               </div>
               <ul className="who stack">
@@ -398,7 +416,7 @@ export default function App({ lang: initialLang = 'es' }: { lang?: 'es' | 'en' }
 
       <footer className="footer deep fade">
         <div className="container footer-row">
-          <img src="/brand/logo-light.png" width="132" height="44" alt={ui.brandAlt} />
+          <img src="/brand/logo-light.webp" width="132" height="44" alt={ui.brandAlt} />
           <p>{ui.footerLine}</p>
           <p>2026</p>
         </div>
